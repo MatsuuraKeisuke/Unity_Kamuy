@@ -1,3 +1,3 @@
 # MatsuuraProject
 kamuyに関するファイル
-NITRo_sato
+ubuntu ?password NITRo_sato
