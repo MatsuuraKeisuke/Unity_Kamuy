@@ -17,13 +17,10 @@ public class Controller_ver1 : MonoBehaviour
     private ArticulationDrive[] legs_xDrive = new ArticulationDrive[4];
     private ArticulationBody artBody= new ArticulationBody();
     private float[] lim = {-10f,20f,-80f,40f,-50f,70f};
-
+    int sti=10000;
+    int dam=100;
+    int flim=1000;   
     void Start(){
-
-        float delayInSeconds = 1.0f; 
-        Invoke("InitializeArticulationBodies", delayInSeconds);
-    }
-    void InitializeArticulationBodies(){
 
         body = this.transform.Find("base_link").gameObject;
         scapulas[0] = body.transform.Find("back_left_link_first").gameObject;
@@ -43,6 +40,9 @@ public class Controller_ver1 : MonoBehaviour
         for(int i=0;i<4;i++){
             scapulas_Artic[i] = scapulas[i].GetComponent<ArticulationBody>();  
             scapulas_xDrive[i] = scapulas_Artic[i].xDrive;   
+            scapulas_xDrive[i].stiffness = sti;  
+            scapulas_xDrive[i].damping = dam;       
+            scapulas_xDrive[i].forceLimit = flim;  
             if(i==0 || i==3){
                 scapulas_xDrive[i].lowerLimit = -lim[1];
                 scapulas_xDrive[i].upperLimit = -lim[0];
@@ -61,8 +61,14 @@ public class Controller_ver1 : MonoBehaviour
 
             thighs_xDrive[i].lowerLimit = lim[2];
             thighs_xDrive[i].upperLimit = lim[3];
+            thighs_xDrive[i].stiffness = sti;  
+            thighs_xDrive[i].damping = dam;       
+            thighs_xDrive[i].forceLimit = flim;
             legs_xDrive[i].lowerLimit = lim[4];
             legs_xDrive[i].upperLimit = lim[5];
+            legs_xDrive[i].stiffness = sti;  
+            legs_xDrive[i].damping = dam;       
+            legs_xDrive[i].forceLimit = flim;  
 
             thighs_Artic[i].xDrive = thighs_xDrive[i];
             legs_Artic[i].xDrive = legs_xDrive[i];    
@@ -95,11 +101,21 @@ public class Controller_ver1 : MonoBehaviour
                 if(i==0 || i==3){
                     scapulas_xDrive[i] = scapulas_Artic[i].xDrive;    
                     scapulas_xDrive[i].target -= 1f;
+                    if (scapulas_xDrive[i].target > scapulas_xDrive[i].upperLimit) {
+                        scapulas_xDrive[i].target = scapulas_xDrive[i].upperLimit;
+                    }else if (scapulas_xDrive[i].target < scapulas_xDrive[i].lowerLimit) {
+                        scapulas_xDrive[i].target = scapulas_xDrive[i].lowerLimit;
+                    } 
                     scapulas_Artic[i].xDrive = scapulas_xDrive[i];   
                 }
                 else{
                     scapulas_xDrive[i] = scapulas_Artic[i].xDrive;                        
                     scapulas_xDrive[i].target += 1f;
+                    if (scapulas_xDrive[i].target > scapulas_xDrive[i].upperLimit) {
+                        scapulas_xDrive[i].target = scapulas_xDrive[i].upperLimit;
+                    }else if (scapulas_xDrive[i].target < scapulas_xDrive[i].lowerLimit) {
+                        scapulas_xDrive[i].target = scapulas_xDrive[i].lowerLimit;
+                    } 
                     scapulas_Artic[i].xDrive = scapulas_xDrive[i];    
                 }
             }
@@ -110,11 +126,21 @@ public class Controller_ver1 : MonoBehaviour
                 if(i==0 || i==3){
                     scapulas_xDrive[i] = scapulas_Artic[i].xDrive;
                     scapulas_xDrive[i].target += 1f;
+                    if (scapulas_xDrive[i].target > scapulas_xDrive[i].upperLimit) {
+                        scapulas_xDrive[i].target = scapulas_xDrive[i].upperLimit;
+                    }else if (scapulas_xDrive[i].target < scapulas_xDrive[i].lowerLimit) {
+                        scapulas_xDrive[i].target = scapulas_xDrive[i].lowerLimit;
+                    } 
                     scapulas_Artic[i].xDrive = scapulas_xDrive[i];   
                 }
                 else{
                     scapulas_xDrive[i] = scapulas_Artic[i].xDrive;
                     scapulas_xDrive[i].target -= 1f;
+                    if (scapulas_xDrive[i].target > scapulas_xDrive[i].upperLimit) {
+                        scapulas_xDrive[i].target = scapulas_xDrive[i].upperLimit;
+                    }else if (scapulas_xDrive[i].target < scapulas_xDrive[i].lowerLimit) {
+                        scapulas_xDrive[i].target = scapulas_xDrive[i].lowerLimit;
+                    } 
                     scapulas_Artic[i].xDrive = scapulas_xDrive[i];    
                 }
             }
@@ -125,7 +151,17 @@ public class Controller_ver1 : MonoBehaviour
             thighs_xDrive[i] = thighs_Artic[i].xDrive;
             thighs_xDrive[i+2] = thighs_Artic[i+2].xDrive;           
             thighs_xDrive[i].target -= 1f;     
-            thighs_xDrive[i+2].target -= 1f;       
+            thighs_xDrive[i+2].target -= 1f;
+            if (thighs_xDrive[i].target > thighs_xDrive[i].upperLimit) {
+                thighs_xDrive[i].target = thighs_xDrive[i].upperLimit;
+            }else if (thighs_xDrive[i].target < thighs_xDrive[i].lowerLimit) {
+                thighs_xDrive[i].target = thighs_xDrive[i].lowerLimit;
+            }  
+            if (thighs_xDrive[i+2].target > thighs_xDrive[i+2].upperLimit) {
+                thighs_xDrive[i+2].target = thighs_xDrive[i+2].upperLimit;
+            }else if (thighs_xDrive[i+2].target < thighs_xDrive[i+2].lowerLimit) {
+                thighs_xDrive[i+2].target = thighs_xDrive[i+2].lowerLimit;
+            }       
             thighs_Artic[i].xDrive = thighs_xDrive[i];   
             thighs_Artic[i+2].xDrive = thighs_xDrive[i+2];
         }
@@ -135,7 +171,17 @@ public class Controller_ver1 : MonoBehaviour
             thighs_xDrive[i] = thighs_Artic[i].xDrive;
             thighs_xDrive[i+2] = thighs_Artic[i+2].xDrive;      
             thighs_xDrive[i].target += 1f;     
-            thighs_xDrive[i+2].target += 1f;       
+            thighs_xDrive[i+2].target += 1f;  
+            if (thighs_xDrive[i].target > thighs_xDrive[i].upperLimit) {
+                thighs_xDrive[i].target = thighs_xDrive[i].upperLimit;
+            }else if (thighs_xDrive[i].target < thighs_xDrive[i].lowerLimit) {
+                thighs_xDrive[i].target = thighs_xDrive[i].lowerLimit;
+            }  
+            if (thighs_xDrive[i+2].target > thighs_xDrive[i+2].upperLimit) {
+                thighs_xDrive[i+2].target = thighs_xDrive[i+2].upperLimit;
+            }else if (thighs_xDrive[i+2].target < thighs_xDrive[i+2].lowerLimit) {
+                thighs_xDrive[i+2].target = thighs_xDrive[i+2].lowerLimit;
+            }       
             thighs_Artic[i].xDrive = thighs_xDrive[i];   
             thighs_Artic[i+2].xDrive = thighs_xDrive[i+2]; 
         }
@@ -145,7 +191,17 @@ public class Controller_ver1 : MonoBehaviour
             legs_xDrive[i] = legs_Artic[i].xDrive;
             legs_xDrive[i+2] = legs_Artic[i+2].xDrive;
             legs_xDrive[i].target  -= 1f; 
-            legs_xDrive[i+2].target  -= 1f;       
+            legs_xDrive[i+2].target  -= 1f; 
+            if (legs_xDrive[i].target > legs_xDrive[i].upperLimit) {
+                legs_xDrive[i].target = legs_xDrive[i].upperLimit;
+            }else if (legs_xDrive[i].target < legs_xDrive[i].lowerLimit) {
+                legs_xDrive[i].target = legs_xDrive[i].lowerLimit;
+            }  
+            if (legs_xDrive[i+2].target > legs_xDrive[i+2].upperLimit) {
+                legs_xDrive[i+2].target = legs_xDrive[i+2].upperLimit;
+            }else if (legs_xDrive[i+2].target < legs_xDrive[i+2].lowerLimit) {
+                legs_xDrive[i+2].target = legs_xDrive[i+2].lowerLimit;
+            }       
             legs_Artic[i].xDrive = legs_xDrive[i];
             legs_Artic[i+2].xDrive = legs_xDrive[i+2];
         }
@@ -155,7 +211,17 @@ public class Controller_ver1 : MonoBehaviour
             legs_xDrive[i] = legs_Artic[i].xDrive;
             legs_xDrive[i+2] = legs_Artic[i+2].xDrive;                    
             legs_xDrive[i].target  += 1f; 
-            legs_xDrive[i+2].target  += 1f;       
+            legs_xDrive[i+2].target  += 1f;  
+            if (legs_xDrive[i].target > legs_xDrive[i].upperLimit) {
+                legs_xDrive[i].target = legs_xDrive[i].upperLimit;
+            }else if (legs_xDrive[i].target < legs_xDrive[i].lowerLimit) {
+                legs_xDrive[i].target = legs_xDrive[i].lowerLimit;
+            }  
+            if (legs_xDrive[i+2].target > legs_xDrive[i+2].upperLimit) {
+                legs_xDrive[i+2].target = legs_xDrive[i+2].upperLimit;
+            }else if (legs_xDrive[i+2].target < legs_xDrive[i+2].lowerLimit) {
+                legs_xDrive[i+2].target = legs_xDrive[i+2].lowerLimit;
+            }     
             legs_Artic[i].xDrive = legs_xDrive[i];
             legs_Artic[i+2].xDrive = legs_xDrive[i+2];
         }
@@ -165,7 +231,17 @@ public class Controller_ver1 : MonoBehaviour
             thighs_xDrive[i] = thighs_Artic[i].xDrive;
             thighs_xDrive[i+2] = thighs_Artic[i+2].xDrive;                
             thighs_xDrive[i].target -= 1f;     
-            thighs_xDrive[i+2].target -= 1f;       
+            thighs_xDrive[i+2].target -= 1f;    
+            if (thighs_xDrive[i].target > thighs_xDrive[i].upperLimit) {
+                thighs_xDrive[i].target = thighs_xDrive[i].upperLimit;
+            }else if (thighs_xDrive[i].target < thighs_xDrive[i].lowerLimit) {
+                thighs_xDrive[i].target = thighs_xDrive[i].lowerLimit;
+            }  
+            if (thighs_xDrive[i+2].target > thighs_xDrive[i+2].upperLimit) {
+                thighs_xDrive[i+2].target = thighs_xDrive[i+2].upperLimit;
+            }else if (thighs_xDrive[i+2].target < thighs_xDrive[i+2].lowerLimit) {
+                thighs_xDrive[i+2].target = thighs_xDrive[i+2].lowerLimit;
+            }    
             thighs_Artic[i].xDrive = thighs_xDrive[i];   
             thighs_Artic[i+2].xDrive = thighs_xDrive[i+2];
         }
@@ -175,7 +251,17 @@ public class Controller_ver1 : MonoBehaviour
             thighs_xDrive[i] = thighs_Artic[i].xDrive;
             thighs_xDrive[i+2] = thighs_Artic[i+2].xDrive;                        
             thighs_xDrive[i].target += 1f;     
-            thighs_xDrive[i+2].target += 1f;       
+            thighs_xDrive[i+2].target += 1f; 
+            if (thighs_xDrive[i].target > thighs_xDrive[i].upperLimit) {
+                thighs_xDrive[i].target = thighs_xDrive[i].upperLimit;
+            }else if (thighs_xDrive[i].target < thighs_xDrive[i].lowerLimit) {
+                thighs_xDrive[i].target = thighs_xDrive[i].lowerLimit;
+            }  
+            if (thighs_xDrive[i+2].target > thighs_xDrive[i+2].upperLimit) {
+                thighs_xDrive[i+2].target = thighs_xDrive[i+2].upperLimit;
+            }else if (thighs_xDrive[i+2].target < thighs_xDrive[i+2].lowerLimit) {
+                thighs_xDrive[i+2].target = thighs_xDrive[i+2].lowerLimit;
+            }       
             thighs_Artic[i].xDrive = thighs_xDrive[i];   
             thighs_Artic[i+2].xDrive = thighs_xDrive[i+2];
         }
@@ -185,7 +271,17 @@ public class Controller_ver1 : MonoBehaviour
             legs_xDrive[i] = legs_Artic[i].xDrive;
             legs_xDrive[i+2] = legs_Artic[i+2].xDrive;            
             legs_xDrive[i].target  -= 1f; 
-            legs_xDrive[i+2].target  -= 1f;       
+            legs_xDrive[i+2].target  -= 1f;     
+            if (legs_xDrive[i].target > legs_xDrive[i].upperLimit) {
+                legs_xDrive[i].target = legs_xDrive[i].upperLimit;
+            }else if (legs_xDrive[i].target < legs_xDrive[i].lowerLimit) {
+                legs_xDrive[i].target = legs_xDrive[i].lowerLimit;
+            }  
+            if (legs_xDrive[i+2].target > legs_xDrive[i+2].upperLimit) {
+                legs_xDrive[i+2].target = legs_xDrive[i+2].upperLimit;
+            }else if (legs_xDrive[i+2].target < legs_xDrive[i+2].lowerLimit) {
+                legs_xDrive[i+2].target = legs_xDrive[i+2].lowerLimit;
+            }  
             legs_Artic[i].xDrive = legs_xDrive[i];
             legs_Artic[i+2].xDrive = legs_xDrive[i+2];
         }
@@ -195,7 +291,17 @@ public class Controller_ver1 : MonoBehaviour
             legs_xDrive[i] = legs_Artic[i].xDrive;
             legs_xDrive[i+2] = legs_Artic[i+2].xDrive;                      
             legs_xDrive[i].target  += 1f; 
-            legs_xDrive[i+2].target  += 1f;       
+            legs_xDrive[i+2].target  += 1f;      
+            if (legs_xDrive[i].target > legs_xDrive[i].upperLimit) {
+                legs_xDrive[i].target = legs_xDrive[i].upperLimit;
+            }else if (legs_xDrive[i].target < legs_xDrive[i].lowerLimit) {
+                legs_xDrive[i].target = legs_xDrive[i].lowerLimit;
+            }  
+            if (legs_xDrive[i+2].target > legs_xDrive[i+2].upperLimit) {
+                legs_xDrive[i+2].target = legs_xDrive[i+2].upperLimit;
+            }else if (legs_xDrive[i+2].target < legs_xDrive[i+2].lowerLimit) {
+                legs_xDrive[i+2].target = legs_xDrive[i+2].lowerLimit;
+            } 
             legs_Artic[i].xDrive = legs_xDrive[i];
             legs_Artic[i+2].xDrive = legs_xDrive[i+2];
         }
