@@ -9,7 +9,7 @@ using System.Net.Sockets;
 
 public class Kam : Agent
 {
-    private float TargetWalkingSpeed =1f;
+    private float TargetWalkingSpeed =0.9f;
 
     public Transform target;
     private GameObject body;
@@ -132,7 +132,7 @@ public class Kam : Agent
 
         previousPositions = new Vector3(0, 0, 0); 
         // target.localPosition = new Vector3(0,0,Random.Range(10f,20f));
-        target.localPosition = new Vector3(0,0,25f);
+        target.localPosition = new Vector3(0,0,15f);
     }
 
     public override void CollectObservations(VectorSensor sensor){
@@ -185,10 +185,10 @@ public class Kam : Agent
         }
         float CalculateReward(float distance){
             if (distance > 8f){
-                return -0.1f;
+                return 0f;
             }
             else {
-                return 0f;
+                return 0.03f - (distance*0.0002f);
             }
         }
 
@@ -196,17 +196,17 @@ public class Kam : Agent
         distance[5] = Mathf.Abs(scapulas[2].transform.localRotation.eulerAngles.z + scapulas[3].transform.localRotation.eulerAngles.z); 
         distance[6] = Mathf.Abs(scapulas[0].transform.localRotation.eulerAngles.z + scapulas[2].transform.localRotation.eulerAngles.z);
         distance[7] = Mathf.Abs(scapulas[1].transform.localRotation.eulerAngles.z + scapulas[3].transform.localRotation.eulerAngles.z); 
-        distance[8] = Mathf.Abs(scapulas[0].transform.localRotation.eulerAngles.z + scapulas[3].transform.localRotation.eulerAngles.z);
-        distance[9] = Mathf.Abs(scapulas[1].transform.localRotation.eulerAngles.z + scapulas[2].transform.localRotation.eulerAngles.z);                     
+        distance[8] = Mathf.Abs(scapulas[0].transform.localRotation.eulerAngles.z - scapulas[3].transform.localRotation.eulerAngles.z);
+        distance[9] = Mathf.Abs(scapulas[1].transform.localRotation.eulerAngles.z - scapulas[2].transform.localRotation.eulerAngles.z);                     
         for(int i=4;i<10;i++){ 
             AddReward(CalculateReward2(distance[i]));
         }
         float CalculateReward2(float distance){
-            if (distance > 5f){
-                return -0.025f;
+            if (distance > 4f){
+                return 0f;
             }
             else {
-                return 0f;
+                return 0.01f - (distance*0.0002f);
             }
         }
 
@@ -227,16 +227,25 @@ public class Kam : Agent
             }
         AddReward(matchSpeedReward*lookAtTargetReward);
         AddReward(gravityReward*holizonReward);
-        AddReward(-1.5f);
+        AddReward(-1.7f);
 
         float distanceToTarget = Vector3.Distance(currentPosition, target.localPosition);
         float predistanceToTarget = Vector3.Distance(previousPositions, target.localPosition);
+        float sinndou = Mathf.Abs(currentPosition.y - previousPositions.y);
         previousPositions = currentPosition;
 
         if (distanceToTarget < 2f){
             Debug.LogWarning("GOAL");
             EndEpisode();
         }
+
+        if(sinndou<0.0003){
+            if(body.transform.localPosition.z>0.1f){
+                // Debug.LogWarning("sinndou");
+                AddReward(0.5f);    
+            }
+        }
+
 
         if (distanceToTarget - predistanceToTarget > 0.5f){
             Debug.LogWarning("back");
@@ -256,9 +265,12 @@ public class Kam : Agent
         }
 
 
-
+        if(Vector3.Dot(cubeForward, body.transform.forward)<0.995){
+            // Debug.LogWarning("yoko");
+            AddReward(-0.1f);  
+        }
         if(Mathf.Abs(body.transform.localPosition.x)>0.1f){
-            Debug.LogWarning("yokozure");
+            // Debug.LogWarning("yokozure");
             AddReward(-0.5f);  
         }
 
