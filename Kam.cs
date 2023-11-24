@@ -26,10 +26,13 @@ public class Kam : Agent
 
     private float[] distance = {0,0,0,0,0,0,0,0,0,0};
     private Vector3 previousPositions = new Vector3(0, 0, 0); 
-    private float[] lim = {-10f,20f,-80f,40f,-50f,70f};
+    // private float[] lim = {-10f,20f,-80f,40f,-50f,70f};
+    private float[] lim = {-10f,60f,-80f,40f,-50f,70f};
     int sti=10000;
     int dam=100;
     int flim=1000;   
+    bool bb=true;
+    int w=2;
 
     public override void Initialize(){ Debug.Log("Initialize");
         
@@ -110,18 +113,30 @@ public class Kam : Agent
             legs_xDrive[i].target =0;
             legs_xDrive[i].targetVelocity = 0;
 
-            // int ii=2;
-            // thighs_xDrive[ii].lowerLimit = -180;
-            // thighs_xDrive[ii].upperLimit = 180;
-            // thighs_xDrive[ii].stiffness = 0;  
-            // thighs_xDrive[ii].damping = 0;       
-            // thighs_xDrive[ii].forceLimit = 0; 
+            // thighs_xDrive[w].lowerLimit = -360;
+            // thighs_xDrive[w].upperLimit = 360;
+            // thighs_xDrive[w].stiffness = 0;  
+            // thighs_xDrive[w].damping = 0;       
+            // thighs_xDrive[w].forceLimit = 0; 
 
-            // legs_xDrive[ii].lowerLimit = -180;
-            // legs_xDrive[ii].upperLimit = 180;
-            // legs_xDrive[ii].stiffness = 0;  
-            // legs_xDrive[ii].damping = 0;       
-            // legs_xDrive[ii].forceLimit = 0;                     
+            // legs_xDrive[w].lowerLimit = -360;
+            // legs_xDrive[w].upperLimit = 360;
+            // legs_xDrive[w].stiffness = 0;  
+            // legs_xDrive[w].damping = 0;       
+            // legs_xDrive[w].forceLimit = 0;    
+            
+            thighs_xDrive[w].lowerLimit = lim[2];
+            thighs_xDrive[w].upperLimit = lim[3];
+            thighs_xDrive[w].stiffness = sti;  
+            thighs_xDrive[w].damping = dam;       
+            thighs_xDrive[w].forceLimit = flim;
+
+            legs_xDrive[w].lowerLimit = lim[4];
+            legs_xDrive[w].upperLimit = lim[5];
+            legs_xDrive[w].stiffness = sti;  
+            legs_xDrive[w].damping = dam;       
+            legs_xDrive[w].forceLimit = flim;  
+            bb=true;                 
     
             scapulas_Artic[i].xDrive = scapulas_xDrive[i];    
             thighs_Artic[i].xDrive = thighs_xDrive[i];
@@ -132,7 +147,7 @@ public class Kam : Agent
 
         previousPositions = new Vector3(0, 0, 0); 
         // target.localPosition = new Vector3(0,0,Random.Range(10f,20f));
-        target.localPosition = new Vector3(0,0,15f);
+        target.localPosition = new Vector3(0,0,7f);
     }
 
     public override void CollectObservations(VectorSensor sensor){
@@ -164,51 +179,40 @@ public class Kam : Agent
             scapulas_Artic[i].xDrive = scapulas_xDrive[i];    
         }
 
-        // var var4 = actionBuffers.ContinuousActions[4]*force;
-        // for(int i=0;i<4;i++){
-        //     if(i==0 || i==3){
-        //         scapulas_xDrive[i].target -= var4;
+
+        // for(int i=0;i<2;i++){  
+        //     distance[i] = Mathf.Abs(thighs[i].transform.localRotation.eulerAngles.x - thighs[i+2].transform.localRotation.eulerAngles.x);
+        //     distance[i+2] = Mathf.Abs(legs[i].transform.localRotation.eulerAngles.x - legs[i+2].transform.localRotation.eulerAngles.x);       
+        // }
+        // for(int i=0;i<4;i++){ 
+        //     AddReward(CalculateReward(distance[i]));
+        // }
+        // float CalculateReward(float distance){
+        //     if (distance > 8f){
+        //         return 0f;
         //     }
-        //     else{
-        //         scapulas_xDrive[i].target += var4;
+        //     else {
+        //         return 0.03f - (distance*0.0002f);
         //     }
-        //     scapulas_Artic[i].xDrive = scapulas_xDrive[i];    
         // }
 
-
-        for(int i=0;i<2;i++){  
-            distance[i] = Mathf.Abs(thighs[i].transform.localRotation.eulerAngles.x - thighs[i+2].transform.localRotation.eulerAngles.x);
-            distance[i+2] = Mathf.Abs(legs[i].transform.localRotation.eulerAngles.x - legs[i+2].transform.localRotation.eulerAngles.x);       
-        }
-        for(int i=0;i<4;i++){ 
-            AddReward(CalculateReward(distance[i]));
-        }
-        float CalculateReward(float distance){
-            if (distance > 8f){
-                return 0f;
-            }
-            else {
-                return 0.03f - (distance*0.0002f);
-            }
-        }
-
-        distance[4] = Mathf.Abs(scapulas[0].transform.localRotation.eulerAngles.z + scapulas[1].transform.localRotation.eulerAngles.z);
-        distance[5] = Mathf.Abs(scapulas[2].transform.localRotation.eulerAngles.z + scapulas[3].transform.localRotation.eulerAngles.z); 
-        distance[6] = Mathf.Abs(scapulas[0].transform.localRotation.eulerAngles.z + scapulas[2].transform.localRotation.eulerAngles.z);
-        distance[7] = Mathf.Abs(scapulas[1].transform.localRotation.eulerAngles.z + scapulas[3].transform.localRotation.eulerAngles.z); 
-        distance[8] = Mathf.Abs(scapulas[0].transform.localRotation.eulerAngles.z - scapulas[3].transform.localRotation.eulerAngles.z);
-        distance[9] = Mathf.Abs(scapulas[1].transform.localRotation.eulerAngles.z - scapulas[2].transform.localRotation.eulerAngles.z);                     
-        for(int i=4;i<10;i++){ 
-            AddReward(CalculateReward2(distance[i]));
-        }
-        float CalculateReward2(float distance){
-            if (distance > 4f){
-                return 0f;
-            }
-            else {
-                return 0.01f - (distance*0.0002f);
-            }
-        }
+        // distance[4] = Mathf.Abs(scapulas[0].transform.localRotation.eulerAngles.z + scapulas[1].transform.localRotation.eulerAngles.z);
+        // distance[5] = Mathf.Abs(scapulas[2].transform.localRotation.eulerAngles.z + scapulas[3].transform.localRotation.eulerAngles.z); 
+        // distance[6] = Mathf.Abs(scapulas[0].transform.localRotation.eulerAngles.z + scapulas[2].transform.localRotation.eulerAngles.z);
+        // distance[7] = Mathf.Abs(scapulas[1].transform.localRotation.eulerAngles.z + scapulas[3].transform.localRotation.eulerAngles.z); 
+        // distance[8] = Mathf.Abs(scapulas[0].transform.localRotation.eulerAngles.z - scapulas[3].transform.localRotation.eulerAngles.z);
+        // distance[9] = Mathf.Abs(scapulas[1].transform.localRotation.eulerAngles.z - scapulas[2].transform.localRotation.eulerAngles.z);                     
+        // for(int i=4;i<10;i++){ 
+        //     AddReward(CalculateReward2(distance[i]));
+        // }
+        // float CalculateReward2(float distance){
+        //     if (distance > 4f){
+        //         return 0f;
+        //     }
+        //     else {
+        //         return 0.01f - (distance*0.0002f);
+        //     }
+        // }
 
 
         Vector3 currentPosition = body.transform.localPosition;
@@ -226,25 +230,25 @@ public class Kam : Agent
                 return Mathf.Pow(1 - Mathf.Pow(velDeltaMagnitude / TargetWalkingSpeed, 2), 2);
             }
         AddReward(matchSpeedReward*lookAtTargetReward);
-        AddReward(gravityReward*holizonReward);
-        AddReward(-1.7f);
+        // AddReward(gravityReward*holizonReward);
+        AddReward(-0.15f);
 
         float distanceToTarget = Vector3.Distance(currentPosition, target.localPosition);
         float predistanceToTarget = Vector3.Distance(previousPositions, target.localPosition);
         float sinndou = Mathf.Abs(currentPosition.y - previousPositions.y);
         previousPositions = currentPosition;
 
-        if (distanceToTarget < 2f){
+        if (distanceToTarget < 1f){
             Debug.LogWarning("GOAL");
             EndEpisode();
         }
 
-        if(sinndou<0.0003){
-            if(body.transform.localPosition.z>0.1f){
-                // Debug.LogWarning("sinndou");
-                AddReward(0.5f);    
-            }
-        }
+        // if(sinndou<0.0003){
+        //     if(body.transform.localPosition.z>0.1f){
+        //         Debug.LogWarning("sinndou");
+        //         AddReward(0.5f);    
+        //     }
+        // }
 
 
         if (distanceToTarget - predistanceToTarget > 0.5f){
@@ -254,7 +258,7 @@ public class Kam : Agent
         else if (distanceToTarget - predistanceToTarget >= 0f){
             if(body.transform.localPosition.z>0.1f){
                 Debug.LogWarning("littleback");
-                AddReward(-1f);    
+                AddReward(-0.1f);    
             }
         }
 
@@ -265,14 +269,43 @@ public class Kam : Agent
         }
 
 
-        if(Vector3.Dot(cubeForward, body.transform.forward)<0.995){
-            // Debug.LogWarning("yoko");
-            AddReward(-0.1f);  
+        if(body.transform.localPosition.z >Random.Range(2.5f,3.5f)){
+            if(bb){
+
+                thighs_xDrive[w].lowerLimit = -360;
+                thighs_xDrive[w].upperLimit = 360;
+                thighs_xDrive[w].stiffness = 0;  
+                thighs_xDrive[w].damping = 0;       
+                thighs_xDrive[w].forceLimit = 0; 
+
+                legs_xDrive[w].lowerLimit = -360;
+                legs_xDrive[w].upperLimit =360;
+                legs_xDrive[w].stiffness = 0;  
+                legs_xDrive[w].damping = 0;       
+                legs_xDrive[w].forceLimit = 0;   
+
+                // legs_xDrive[w].lowerLimit = lim[4];
+                // legs_xDrive[w].upperLimit = lim[5];
+                // legs_xDrive[w].stiffness = sti;  
+                // legs_xDrive[w].damping = dam;       
+                // legs_xDrive[w].forceLimit = flim;  
+
+                thighs_Artic[w].xDrive = thighs_xDrive[w];
+                legs_Artic[w].xDrive = legs_xDrive[w];                    
+
+                bb=false;
+            }
         }
-        if(Mathf.Abs(body.transform.localPosition.x)>0.1f){
-            // Debug.LogWarning("yokozure");
-            AddReward(-0.5f);  
-        }
+
+        // if(Vector3.Dot(cubeForward, body.transform.forward)<0.995){
+        //     Debug.LogWarning("yoko");
+        //     AddReward(-0.1f);  
+        // }
+
+        // if(Mathf.Abs(body.transform.localPosition.x)>0.1f){
+        //     // Debug.LogWarning("yokozure");
+        //     AddReward(-0.5f);  
+        // }
 
         if(body.transform.localPosition.y <-0.25){
             Debug.LogWarning("ylowreset");
@@ -291,7 +324,7 @@ public class Kam : Agent
     }
     
     public void Update(){ 
-       
+
     }
 }
 
