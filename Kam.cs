@@ -231,7 +231,7 @@ public class Kam : Agent
             }
         AddReward(matchSpeedReward*lookAtTargetReward);
         // AddReward(gravityReward*holizonReward);
-        AddReward(-0.15f);
+        AddReward(-0.25f);
 
         float distanceToTarget = Vector3.Distance(currentPosition, target.localPosition);
         float predistanceToTarget = Vector3.Distance(previousPositions, target.localPosition);
@@ -272,11 +272,11 @@ public class Kam : Agent
         if(body.transform.localPosition.z >Random.Range(2.5f,3.5f)){
             if(bb){
 
-                thighs_xDrive[w].lowerLimit = -360;
-                thighs_xDrive[w].upperLimit = 360;
-                thighs_xDrive[w].stiffness = 0;  
-                thighs_xDrive[w].damping = 0;       
-                thighs_xDrive[w].forceLimit = 0; 
+                // thighs_xDrive[w].lowerLimit = -360;
+                // thighs_xDrive[w].upperLimit = 360;
+                // thighs_xDrive[w].stiffness = 0;  
+                // thighs_xDrive[w].damping = 0;       
+                // thighs_xDrive[w].forceLimit = 0; 
 
                 legs_xDrive[w].lowerLimit = -360;
                 legs_xDrive[w].upperLimit =360;
