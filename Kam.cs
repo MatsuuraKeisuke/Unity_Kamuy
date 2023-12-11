@@ -32,7 +32,7 @@ public class Kam : Agent
     int dam=100;
     int flim=1000;   
     bool bb=true;
-    int w=1;
+    int w=2;
 
     public override void Initialize(){ Debug.Log("Initialize");
         
@@ -113,11 +113,11 @@ public class Kam : Agent
             legs_xDrive[i].target =0;
             legs_xDrive[i].targetVelocity = 0;
 
-            // thighs_xDrive[w].lowerLimit = -360;
-            // thighs_xDrive[w].upperLimit = 360;
-            // thighs_xDrive[w].stiffness = 0;  
-            // thighs_xDrive[w].damping = 0;       
-            // thighs_xDrive[w].forceLimit = 0; 
+            thighs_xDrive[w].lowerLimit = -360;
+            thighs_xDrive[w].upperLimit = 360;
+            thighs_xDrive[w].stiffness = 0;  
+            thighs_xDrive[w].damping = 0;       
+            thighs_xDrive[w].forceLimit = 0; 
 
             // legs_xDrive[w].lowerLimit = -360;
             // legs_xDrive[w].upperLimit = 360;
@@ -136,18 +136,18 @@ public class Kam : Agent
             // legs_xDrive[w].damping = 0;       
             // legs_xDrive[w].forceLimit = 0;    
             
-            thighs_xDrive[w].lowerLimit = lim[2];
-            thighs_xDrive[w].upperLimit = lim[3];
-            thighs_xDrive[w].stiffness = sti;  
-            thighs_xDrive[w].damping = dam;       
-            thighs_xDrive[w].forceLimit = flim;
+            // thighs_xDrive[w].lowerLimit = lim[2];
+            // thighs_xDrive[w].upperLimit = lim[3];
+            // thighs_xDrive[w].stiffness = sti;  
+            // thighs_xDrive[w].damping = dam;       
+            // thighs_xDrive[w].forceLimit = flim;
 
-            legs_xDrive[w].lowerLimit = lim[4];
-            legs_xDrive[w].upperLimit = lim[5];
-            legs_xDrive[w].stiffness = sti;  
-            legs_xDrive[w].damping = dam;       
-            legs_xDrive[w].forceLimit = flim;  
-            bb=true;                 
+            // legs_xDrive[w].lowerLimit = lim[4];
+            // legs_xDrive[w].upperLimit = lim[5];
+            // legs_xDrive[w].stiffness = sti;  
+            // legs_xDrive[w].damping = dam;       
+            // legs_xDrive[w].forceLimit = flim;  
+            // bb=true;                 
     
             scapulas_Artic[i].xDrive = scapulas_xDrive[i];    
             thighs_Artic[i].xDrive = thighs_xDrive[i];
@@ -242,7 +242,7 @@ public class Kam : Agent
             }
         AddReward(matchSpeedReward*lookAtTargetReward);
         // AddReward(gravityReward*holizonReward);
-        AddReward(-0.1f);
+        AddReward(-0.05f);
 
         float distanceToTarget = Vector3.Distance(currentPosition, target.localPosition);
         float predistanceToTarget = Vector3.Distance(previousPositions, target.localPosition);
@@ -268,7 +268,7 @@ public class Kam : Agent
         }
         else if (distanceToTarget - predistanceToTarget >= 0f){
             if(body.transform.localPosition.z>0.1f){
-                Debug.LogWarning("littleback");
+                // Debug.LogWarning("littleback");
                 AddReward(-0.05f);    
             }
         }
@@ -285,62 +285,62 @@ public class Kam : Agent
         }
 
 
-        if(body.transform.localPosition.z >Random.Range(1f,3f)){     
+        // if(body.transform.localPosition.z >Random.Range(1f,3f)){     
 
-            if(bb){
-                var lockthings = thighs[w].transform.localRotation.eulerAngles.x;
-                var locklegs = legs[w].transform.localRotation.eulerAngles.x;
-                var lockscapulas = scapulas[w].transform.localRotation.eulerAngles.z;
+        //     if(bb){
+        //         var lockthings = thighs[w].transform.localRotation.eulerAngles.x;
+        //         var locklegs = legs[w].transform.localRotation.eulerAngles.x;
+        //         var lockscapulas = scapulas[w].transform.localRotation.eulerAngles.z;
 
-                artBody.enabled = false;
-                    // scapulas[w].transform.localRotation = Quaternion.Euler(0, 0, lockscapulas);
-                    thighs[w].transform.localRotation = Quaternion.Euler(lockthings, 0, 0);
-                    legs[w].transform.localRotation = Quaternion.Euler(locklegs,0,0);  
-                artBody.enabled = true;    
+        //         artBody.enabled = false;
+        //             // scapulas[w].transform.localRotation = Quaternion.Euler(0, 0, lockscapulas);
+        //             thighs[w].transform.localRotation = Quaternion.Euler(lockthings, 0, 0);
+        //             // legs[w].transform.localRotation = Quaternion.Euler(locklegs,0,0);  
+        //         artBody.enabled = true;    
 
-                Debug.LogWarning("change");
-                bb=false;
+        //         Debug.LogWarning("change");
+        //         bb=false;
 
-                // scapulas_xDrive[w].target =0;
-                // scapulas_xDrive[w].targetVelocity = 0;
-                // scapulas_xDrive[w].lowerLimit = -0;
-                // scapulas_xDrive[w].upperLimit = 0;
-                // scapulas_xDrive[w].stiffness = 0;  
-                // scapulas_xDrive[w].damping = 0;       
-                // scapulas_xDrive[w].forceLimit = 0;    
-                // scapulas_Artic[w].xDrive = scapulas_xDrive[w];   
+        //         // scapulas_xDrive[w].target =0;
+        //         // scapulas_xDrive[w].targetVelocity = 0;
+        //         // scapulas_xDrive[w].lowerLimit = -0;
+        //         // scapulas_xDrive[w].upperLimit = 0;
+        //         // scapulas_xDrive[w].stiffness = 0;  
+        //         // scapulas_xDrive[w].damping = 0;       
+        //         // scapulas_xDrive[w].forceLimit = 0;    
+        //         // scapulas_Artic[w].xDrive = scapulas_xDrive[w];   
 
-                thighs_xDrive[w].target =0;        
-                thighs_xDrive[w].targetVelocity = 0;
-                thighs_xDrive[w].lowerLimit = -0;
-                thighs_xDrive[w].upperLimit = 0;
-                thighs_xDrive[w].stiffness = 0;  
-                thighs_xDrive[w].damping = 0;       
-                thighs_xDrive[w].forceLimit = 0; 
-                thighs_Artic[w].xDrive = thighs_xDrive[w];
+        //         thighs_xDrive[w].target =0;        
+        //         thighs_xDrive[w].targetVelocity = 0;
+        //         thighs_xDrive[w].lowerLimit = -0;
+        //         thighs_xDrive[w].upperLimit = 0;
+        //         thighs_xDrive[w].stiffness = 0;  
+        //         thighs_xDrive[w].damping = 0;       
+        //         thighs_xDrive[w].forceLimit = 0; 
+        //         thighs_Artic[w].xDrive = thighs_xDrive[w];
 
-                legs_xDrive[w].target =0;
-                legs_xDrive[w].targetVelocity = 0;    
-                legs_xDrive[w].lowerLimit = -0;
-                legs_xDrive[w].upperLimit = 0;
-                legs_xDrive[w].stiffness = 0;  
-                legs_xDrive[w].damping = 0;       
-                legs_xDrive[w].forceLimit = 0;    
-                legs_Artic[w].xDrive = legs_xDrive[w];   
+        //         legs_xDrive[w].target =0;
+        //         legs_xDrive[w].targetVelocity = 0;    
+        //         legs_xDrive[w].lowerLimit = -0;
+        //         legs_xDrive[w].upperLimit = 0;
+        //         legs_xDrive[w].stiffness = 0;  
+        //         legs_xDrive[w].damping = 0;       
+        //         legs_xDrive[w].forceLimit = 0;    
+        //         legs_Artic[w].xDrive = legs_xDrive[w];   
 
-            }
-        }
+        //     }
+        // }
 
 
         // if(body.transform.localPosition.z >Random.Range(2.5f,3.5f)){
         // if(body.transform.localPosition.z >Random.Range(1f,2f)){     
         //     if(bb){
         //         Debug.LogWarning("change");
-        //         // thighs_xDrive[w].lowerLimit = -360;
-        //         // thighs_xDrive[w].upperLimit = 360;
-        //         // thighs_xDrive[w].stiffness = 0;  
-        //         // thighs_xDrive[w].damping = 0;       
-        //         // thighs_xDrive[w].forceLimit = 0; 
+        //         thighs_xDrive[w].lowerLimit = -360;
+        //         thighs_xDrive[w].upperLimit = 360;
+        //         thighs_xDrive[w].stiffness = 0;  
+        //         thighs_xDrive[w].damping = 0;       
+        //         thighs_xDrive[w].forceLimit = 0; 
 
         //         // legs_xDrive[w].lowerLimit = -360;
         //         // legs_xDrive[w].upperLimit =360;
@@ -366,9 +366,9 @@ public class Kam : Agent
         //     AddReward(-0.1f);  
         // }
 
-        if(Mathf.Abs(body.transform.localPosition.x)>0.2f){
-            Debug.LogWarning("yokozure");
-            AddReward(-0.05f);  
+        if(Mathf.Abs(body.transform.localPosition.x)>0.1f){
+            // Debug.LogWarning("yokozure");  
+            AddReward(-0.05f*body.transform.localPosition.x);  
         }
 
 
