@@ -122,7 +122,8 @@ public class Kam : Agent
             // legs_xDrive[w].lowerLimit = -360;
             // legs_xDrive[w].upperLimit = 360;
             // legs_xDrive[w].stiffness = 0;  
-            // legs_xDrive[w].damping = 0;       
+            // legs_xDrive[w].damping = 0;
+            // legs_xDrive[w].forceLimit = 0; 
             
             // thighs_xDrive[w].lowerLimit = -0;
             // thighs_xDrive[w].upperLimit = 0;
