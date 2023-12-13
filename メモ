@@ -23,6 +23,8 @@ Kam_ver10-1 best
 Kam_ver11 右前 legだけ負傷：途中から
 
 Kam_ver12 右前 全体負傷：途中から
+Kam_ver12-1 右前 second_third free (ver12をモデルに)
+12-2  続き(12/13)
 
 Kam_ver13 右後 legだけ負傷  (ver11をモデルに)
 13-1   続き
@@ -30,8 +32,20 @@ Kam_ver13 右後 legだけ負傷  (ver11をモデルに)
 13-3   右後 legだけ負傷　(ver13-2をモデルに)
 13-4   続き　(ver13-3をモデルに)
 
-Kam_ver14 右前　全部固定　(from ver8-3)
+Kam_ver14 右前　２箇所固定　(from ver8-3)
+14-1  続き(12/12)
 
 Kam_ver15 右前 legだけ固定  (ver８−２をモデルに)
 
-Kam_ver16 右後ろ ２箇所固定  (ver８−２をモデルに)
+Kam_ver16 右後 ２箇所固定  (ver８−２をモデルに)
+16-1  続き(12/11)
+
+Kam_ver17 右後 second lock  (ver８−3をモデルに)
+
+Kam_ver18 右後 third lock  (ver８−3をモデルに)
+
+Kam_ver19 右前 second lock  (ver８−3をモデルに)
+
+Kam_ver20 右前 second free  (ver８−3をモデルに)
+
+Kam_ver21 右後 second free  (ver８−3をモデルに)
