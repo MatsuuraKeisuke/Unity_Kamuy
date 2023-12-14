@@ -105,7 +105,7 @@ public class Kam : Agent
         for(int i=0;i<4;i++){
             thighs[i].transform.localRotation = Quaternion.Euler(40f, 0, 0);
             legs[i].transform.localRotation = Quaternion.Euler(-75f,0,0); 
-
+  
             scapulas_xDrive[i].target =0;
             scapulas_xDrive[i].targetVelocity = 0;
             thighs_xDrive[i].target =0;        
@@ -113,30 +113,20 @@ public class Kam : Agent
             legs_xDrive[i].target =0;
             legs_xDrive[i].targetVelocity = 0;
 
+////////////free/////////////////
             thighs_xDrive[w].lowerLimit = -360;
             thighs_xDrive[w].upperLimit = 360;
             thighs_xDrive[w].stiffness = 0;  
             thighs_xDrive[w].damping = 0;       
             thighs_xDrive[w].forceLimit = 0; 
 
-            // legs_xDrive[w].lowerLimit = -360;
-            // legs_xDrive[w].upperLimit = 360;
-            // legs_xDrive[w].stiffness = 0;  
-            // legs_xDrive[w].damping = 0;
-            // legs_xDrive[w].forceLimit = 0; 
-            
-            // thighs_xDrive[w].lowerLimit = -0;
-            // thighs_xDrive[w].upperLimit = 0;
-            // thighs_xDrive[w].stiffness = 0;  
-            // thighs_xDrive[w].damping = 0;       
-            // thighs_xDrive[w].forceLimit = 0; 
+            legs_xDrive[w].lowerLimit = -360;
+            legs_xDrive[w].upperLimit = 360;
+            legs_xDrive[w].stiffness = 0;  
+            legs_xDrive[w].damping = 0;   
+            legs_xDrive[w].forceLimit = 0;   
 
-            // legs_xDrive[w].lowerLimit = -0;
-            // legs_xDrive[w].upperLimit = 0;
-            // legs_xDrive[w].stiffness = 0;  
-            // legs_xDrive[w].damping = 0;       
-            // legs_xDrive[w].forceLimit = 0;    
-            
+////////////free 途中から//////////////
             // thighs_xDrive[w].lowerLimit = lim[2];
             // thighs_xDrive[w].upperLimit = lim[3];
             // thighs_xDrive[w].stiffness = sti;  
@@ -243,7 +233,8 @@ public class Kam : Agent
             }
         AddReward(matchSpeedReward*lookAtTargetReward);
         // AddReward(gravityReward*holizonReward);
-        AddReward(-0.05f);
+        AddReward(-0.1f);
+        AddReward(-0.05f*body.transform.localPosition.x);  
 
         float distanceToTarget = Vector3.Distance(currentPosition, target.localPosition);
         float predistanceToTarget = Vector3.Distance(previousPositions, target.localPosition);
@@ -254,15 +245,16 @@ public class Kam : Agent
             Debug.LogWarning("GOAL");
             EndEpisode();
         }
-
         // if(sinndou<0.0003){
         //     if(body.transform.localPosition.z>0.1f){
         //         Debug.LogWarning("sinndou");
         //         AddReward(0.5f);    
         //     }
         // }
-
-
+        // if(Vector3.Dot(cubeForward, body.transform.forward)<0.995){
+        //     Debug.LogWarning("yoko");
+        //     AddReward(-0.1f);  
+        // }
         if (distanceToTarget - predistanceToTarget > 0.5f){
             Debug.LogWarning("back");
             EndEpisode();
@@ -274,16 +266,6 @@ public class Kam : Agent
             }
         }
 
-
-        if(body.transform.localPosition.z<-0.1f){
-            Debug.LogWarning("out");
-            EndEpisode();
-        }
-
-        if(body.transform.localPosition.z>7f){
-            Debug.LogWarning("stop");
-            EndEpisode();
-        }
 
 
         // if(body.transform.localPosition.z >Random.Range(1f,3f)){     
@@ -362,17 +344,15 @@ public class Kam : Agent
         //     }
         // }
 
-        // if(Vector3.Dot(cubeForward, body.transform.forward)<0.995){
-        //     Debug.LogWarning("yoko");
-        //     AddReward(-0.1f);  
-        // }
 
-        if(Mathf.Abs(body.transform.localPosition.x)>0.1f){
-            // Debug.LogWarning("yokozure");  
-            AddReward(-0.05f*body.transform.localPosition.x);  
+        if(body.transform.localPosition.z<-0.1f){
+            Debug.LogWarning("out");
+            EndEpisode();
         }
-
-
+        if(body.transform.localPosition.z>7f){
+            Debug.LogWarning("stop");
+            EndEpisode();
+        }
         if(body.transform.localPosition.y <-0.25){
             Debug.LogWarning("ylowreset");
             EndEpisode();   
