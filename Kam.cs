@@ -141,6 +141,12 @@ public class Kam : Agent
                 third_link_xDrive[i].target =0;
                 third_link_xDrive[i].targetVelocity = 0; 
 ////////////free/////////////////
+            first_link_xDrive[w].lowerLimit = -360;
+            first_link_xDrive[w].upperLimit = 360;
+            first_link_xDrive[w].stiffness = 0;  
+            first_link_xDrive[w].damping = 0;       
+            first_link_xDrive[w].forceLimit = 0;
+
             // second_link_xDrive[w].lowerLimit = -360;
             // second_link_xDrive[w].upperLimit = 360;
             // second_link_xDrive[w].stiffness = 0;  
@@ -246,7 +252,7 @@ public class Kam : Agent
         AddReward(matchSpeedReward*lookAtTargetReward);
         // AddReward(gravityReward*holizonReward);
         AddReward(-0.1f);
-        AddReward(-0.05f*body.transform.localPosition.x);  
+        AddReward(-0.08f*body.transform.localPosition.x);  
 
         float distanceToTarget = Vector3.Distance(currentPosition, target.localPosition);
         float predistanceToTarget = Vector3.Distance(previousPositions, target.localPosition);
@@ -325,35 +331,35 @@ public class Kam : Agent
         // }
 //////////////////////////////////////////////////// 
 
-////////////free 途中から//////////////
+////////////free 途中から////////////////////////////
         // // if(body.transform.localPosition.z >Random.Range(2.5f,3.5f)){
-        if(body.transform.localPosition.z >Random.Range(1f,2f)){     
-            if(bb){
-                Debug.LogWarning("change");
-                bb=false;                
+        // if(body.transform.localPosition.z >Random.Range(1f,2f)){     
+        //     if(bb){
+        //         Debug.LogWarning("change");
+        //         bb=false;                
 
-                first_link_xDrive[w].lowerLimit = -360;
-                first_link_xDrive[w].upperLimit = 360;
-                first_link_xDrive[w].stiffness = 0;  
-                first_link_xDrive[w].damping = 0;       
-                first_link_xDrive[w].forceLimit = 0; 
-                first_link_Artic[w].xDrive = first_link_xDrive[w];
+        //         first_link_xDrive[w].lowerLimit = -360;
+        //         first_link_xDrive[w].upperLimit = 360;
+        //         first_link_xDrive[w].stiffness = 0;  
+        //         first_link_xDrive[w].damping = 0;       
+        //         first_link_xDrive[w].forceLimit = 0; 
+        //         first_link_Artic[w].xDrive = first_link_xDrive[w];
 
-                // second_link_xDrive[w].lowerLimit = -360;
-                // second_link_xDrive[w].upperLimit = 360;
-                // second_link_xDrive[w].stiffness = 0;  
-                // second_link_xDrive[w].damping = 0;       
-                // second_link_xDrive[w].forceLimit = 0; 
-                // second_link_Artic[w].xDrive = second_link_xDrive[w];                
+        //         // second_link_xDrive[w].lowerLimit = -360;
+        //         // second_link_xDrive[w].upperLimit = 360;
+        //         // second_link_xDrive[w].stiffness = 0;  
+        //         // second_link_xDrive[w].damping = 0;       
+        //         // second_link_xDrive[w].forceLimit = 0; 
+        //         // second_link_Artic[w].xDrive = second_link_xDrive[w];                
 
-                // third_link_xDrive[w].lowerLimit = -360;
-                // third_link_xDrive[w].upperLimit =360;
-                // third_link_xDrive[w].stiffness = 0;  
-                // third_link_xDrive[w].damping = 0;       
-                // third_link_xDrive[w].forceLimit = 0;   
-                // third_link_Artic[w].xDrive = third_link_xDrive[w];                    
-            }
-        }
+        //         // third_link_xDrive[w].lowerLimit = -360;
+        //         // third_link_xDrive[w].upperLimit =360;
+        //         // third_link_xDrive[w].stiffness = 0;  
+        //         // third_link_xDrive[w].damping = 0;       
+        //         // third_link_xDrive[w].forceLimit = 0;   
+        //         // third_link_Artic[w].xDrive = third_link_xDrive[w];                    
+        //     }
+        // }
 /////////////////////////////////////////////////////////////////        
 
         if(body.transform.localPosition.z<-0.1f){
