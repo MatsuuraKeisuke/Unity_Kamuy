@@ -141,11 +141,11 @@ public class Kam : Agent
                 third_link_xDrive[i].target =0;
                 third_link_xDrive[i].targetVelocity = 0; 
 ////////////free/////////////////
-            first_link_xDrive[w].lowerLimit = -360;
-            first_link_xDrive[w].upperLimit = 360;
-            first_link_xDrive[w].stiffness = 0;  
-            first_link_xDrive[w].damping = 0;       
-            first_link_xDrive[w].forceLimit = 0;
+            // first_link_xDrive[w].lowerLimit = -360;
+            // first_link_xDrive[w].upperLimit = 360;
+            // first_link_xDrive[w].stiffness = 0;  
+            // first_link_xDrive[w].damping = 0;       
+            // first_link_xDrive[w].forceLimit = 0;
 
             // second_link_xDrive[w].lowerLimit = -360;
             // second_link_xDrive[w].upperLimit = 360;
@@ -251,8 +251,8 @@ public class Kam : Agent
             }
         AddReward(matchSpeedReward*lookAtTargetReward);
         // AddReward(gravityReward*holizonReward);
-        AddReward(-0.1f);
-        AddReward(-0.08f*body.transform.localPosition.x);  
+        AddReward(-0.2f);
+        AddReward(-1.0f*Mathf.Abs(body.transform.localPosition.x));  
 
         float distanceToTarget = Vector3.Distance(currentPosition, target.localPosition);
         float predistanceToTarget = Vector3.Distance(previousPositions, target.localPosition);
@@ -286,49 +286,49 @@ public class Kam : Agent
 
 
 ////////////lock////////////////////
-        // if(body.transform.localPosition.z >Random.Range(1f,3f)){     
-        //     if(bb){
-        //         var lockfirst_link = first_link[w].transform.localRotation.eulerAngles.z;                
-        //         var locksecond_link = second_link[w].transform.localRotation.eulerAngles.x;
-        //         var lockthird_link = third_link[w].transform.localRotation.eulerAngles.x;
+        if(body.transform.localPosition.z >Random.Range(1f,3f)){     
+            if(bb){
+                var lockfirst_link = first_link[w].transform.localRotation.eulerAngles.z;                
+                var locksecond_link = second_link[w].transform.localRotation.eulerAngles.x;
+                var lockthird_link = third_link[w].transform.localRotation.eulerAngles.x;
 
-        //         artBody.enabled = false;
-        //             first_link[w].transform.localRotation = Quaternion.Euler(0, 0, lockfirst_link);
-        //             // second_link[w].transform.localRotation = Quaternion.Euler(locksecond_link, 0, 0);
-        //             // third_link[w].transform.localRotation = Quaternion.Euler(lockthird_link,0,0);  
-        //         artBody.enabled = true;    
+                artBody.enabled = false;
+                    first_link[w].transform.localRotation = Quaternion.Euler(0, 0, lockfirst_link);
+                    // second_link[w].transform.localRotation = Quaternion.Euler(locksecond_link, 0, 0);
+                    // third_link[w].transform.localRotation = Quaternion.Euler(lockthird_link,0,0);  
+                artBody.enabled = true;    
 
-        //         Debug.LogWarning("change");
-        //         bb=false;
+                // Debug.LogWarning("change");
+                bb=false;
 
-        //         first_link_xDrive[w].target =0;
-        //         first_link_xDrive[w].targetVelocity = 0;
-        //         first_link_xDrive[w].lowerLimit = -0;
-        //         first_link_xDrive[w].upperLimit = 0;
-        //         first_link_xDrive[w].stiffness = 0;  
-        //         first_link_xDrive[w].damping = 0;       
-        //         first_link_xDrive[w].forceLimit = 0;    
-        //         first_link_Artic[w].xDrive = first_link_xDrive[w];   
+                first_link_xDrive[w].target =0;
+                first_link_xDrive[w].targetVelocity = 0;
+                first_link_xDrive[w].lowerLimit = -0;
+                first_link_xDrive[w].upperLimit = 0;
+                first_link_xDrive[w].stiffness = 0;  
+                first_link_xDrive[w].damping = 0;       
+                first_link_xDrive[w].forceLimit = 0;    
+                first_link_Artic[w].xDrive = first_link_xDrive[w];   
 
-        //         // second_link_xDrive[w].target =0;        
-        //         // second_link_xDrive[w].targetVelocity = 0;
-        //         // second_link_xDrive[w].lowerLimit = -0;
-        //         // second_link_xDrive[w].upperLimit = 0;
-        //         // second_link_xDrive[w].stiffness = 0;  
-        //         // second_link_xDrive[w].damping = 0;       
-        //         // second_link_xDrive[w].forceLimit = 0; 
-        //         // second_link_Artic[w].xDrive = second_link_xDrive[w];
+                // second_link_xDrive[w].target =0;        
+                // second_link_xDrive[w].targetVelocity = 0;
+                // second_link_xDrive[w].lowerLimit = -0;
+                // second_link_xDrive[w].upperLimit = 0;
+                // second_link_xDrive[w].stiffness = 0;  
+                // second_link_xDrive[w].damping = 0;       
+                // second_link_xDrive[w].forceLimit = 0; 
+                // second_link_Artic[w].xDrive = second_link_xDrive[w];
 
-        //         // third_link_xDrive[w].target =0;
-        //         // third_link_xDrive[w].targetVelocity = 0;    
-        //         // third_link_xDrive[w].lowerLimit = -0;
-        //         // third_link_xDrive[w].upperLimit = 0;
-        //         // third_link_xDrive[w].stiffness = 0;  
-        //         // third_link_xDrive[w].damping = 0;       
-        //         // third_link_xDrive[w].forceLimit = 0;    
-        //         // third_link_Artic[w].xDrive = third_link_xDrive[w];   
-        //     }
-        // }
+                // third_link_xDrive[w].target =0;
+                // third_link_xDrive[w].targetVelocity = 0;    
+                // third_link_xDrive[w].lowerLimit = -0;
+                // third_link_xDrive[w].upperLimit = 0;
+                // third_link_xDrive[w].stiffness = 0;  
+                // third_link_xDrive[w].damping = 0;       
+                // third_link_xDrive[w].forceLimit = 0;    
+                // third_link_Artic[w].xDrive = third_link_xDrive[w];   
+            }
+        }
 //////////////////////////////////////////////////// 
 
 ////////////free 途中から////////////////////////////
