@@ -32,7 +32,7 @@ public class Kam : Agent
     int dam=100;
     int flim=1000;   
     bool bb=true;
-    int w=2;
+    int w=1;
     float boxdistance = 8f;
 
     public override void Initialize(){ Debug.Log("Initialize");
@@ -286,7 +286,7 @@ public class Kam : Agent
 
 
 ////////////lock////////////////////
-        if(body.transform.localPosition.z >Random.Range(1f,3f)){     
+        if(body.transform.localPosition.z >Random.Range(1f,2f)){     
             if(bb){
                 var lockfirst_link = first_link[w].transform.localRotation.eulerAngles.z;                
                 var locksecond_link = second_link[w].transform.localRotation.eulerAngles.x;
