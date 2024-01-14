@@ -30,7 +30,7 @@ public class Kam : Agent
     private float[] lim = {-10f,60f,-80f,40f,-50f,70f};
     int sti=10000;
     int dam=100;
-    int flim=1000;   
+    int flim=100;   
     bool bb=true;
     int counter=0;
     int goal=0;   
