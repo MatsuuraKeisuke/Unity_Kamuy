@@ -6,6 +6,7 @@ using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Policies;
 using System.Net.Sockets;
+using UnityEngine.UIElements;
 
 public class Kam : Agent
 {
@@ -33,10 +34,11 @@ public class Kam : Agent
     int flim=100;   
     bool bb=true;
     float goaltime=0;
+    float changepoint=0;
     int counter=0;
     int goal=0;   
     int w=2;
-    float boxdistance = 8f;
+    float boxdistance = 5f;
  
 
     public override void Initialize(){ Debug.Log("Initialize");
@@ -175,6 +177,7 @@ public class Kam : Agent
         }    
         previousPositions = new Vector3(0, 0, 0); 
         target.localPosition = new Vector3(0,0,boxdistance);
+        changepoint = Random.Range(0.5f,1.5f);
     }
 
     public override void CollectObservations(VectorSensor sensor){
@@ -273,7 +276,7 @@ public class Kam : Agent
             Debug.LogWarning("GOAL");
             goal++;
             counter++;
-            Debug.Log(goaltime);            
+            // Debug.Log(goaltime);            
             EndEpisode();
         }
         if (distanceToTarget - predistanceToTarget > 0.5f){
@@ -289,7 +292,7 @@ public class Kam : Agent
         }
 
 ////////////lock////////////////////
-        // if(body.transform.localPosition.z >Random.Range(3f,4f)){     
+        // if(body.transform.localPosition.z >changepoint){     
         //     if(bb){
         //         var lockfirst_link = first_link[w].transform.localRotation.eulerAngles.z;                
         //         var locksecond_link = second_link[w].transform.localRotation.eulerAngles.x;
@@ -332,36 +335,36 @@ public class Kam : Agent
         //         // third_link_Artic[w].xDrive = third_link_xDrive[w];   
         //     }
         // }
-//////////////////////////////////////////////////// 
+////////////////////////////////////////////////////
 
 ////////////free 途中から////////////////////////////
-        // if(body.transform.localPosition.z >Random.Range(3f,4f)){     
-        //     if(bb){
-        //         Debug.LogWarning("change");
-        //         bb=false;                
+        if(body.transform.localPosition.z > changepoint){     
+            if(bb){
+                Debug.LogWarning("change");
+                bb=false;                
 
-        //         first_link_xDrive[w].lowerLimit = -360;
-        //         first_link_xDrive[w].upperLimit = 360;
-        //         first_link_xDrive[w].stiffness = 0;  
-        //         first_link_xDrive[w].damping = 0;       
-        //         first_link_xDrive[w].forceLimit = 0; 
-        //         first_link_Artic[w].xDrive = first_link_xDrive[w];
+                first_link_xDrive[w].lowerLimit = -360;
+                first_link_xDrive[w].upperLimit = 360;
+                first_link_xDrive[w].stiffness = 0;  
+                first_link_xDrive[w].damping = 0;       
+                first_link_xDrive[w].forceLimit = 0; 
+                first_link_Artic[w].xDrive = first_link_xDrive[w];
 
-        //         // second_link_xDrive[w].lowerLimit = -360;
-        //         // second_link_xDrive[w].upperLimit = 360;
-        //         // second_link_xDrive[w].stiffness = 0;  
-        //         // second_link_xDrive[w].damping = 0;       
-        //         // second_link_xDrive[w].forceLimit = 0; 
-        //         // second_link_Artic[w].xDrive = second_link_xDrive[w];                
+                // second_link_xDrive[w].lowerLimit = -360;
+                // second_link_xDrive[w].upperLimit = 360;
+                // second_link_xDrive[w].stiffness = 0;  
+                // second_link_xDrive[w].damping = 0;       
+                // second_link_xDrive[w].forceLimit = 0; 
+                // second_link_Artic[w].xDrive = second_link_xDrive[w];                
 
-        //         // third_link_xDrive[w].lowerLimit = -360;
-        //         // third_link_xDrive[w].upperLimit =360;
-        //         // third_link_xDrive[w].stiffness = 0;  
-        //         // third_link_xDrive[w].damping = 0;       
-        //         // third_link_xDrive[w].forceLimit = 0;   
-        //         // third_link_Artic[w].xDrive = third_link_xDrive[w];                    
-        //     }
-        // }
+                // third_link_xDrive[w].lowerLimit = -360;
+                // third_link_xDrive[w].upperLimit =360;
+                // third_link_xDrive[w].stiffness = 0;  
+                // third_link_xDrive[w].damping = 0;       
+                // third_link_xDrive[w].forceLimit = 0;   
+                // third_link_Artic[w].xDrive = third_link_xDrive[w];                    
+            }
+        }
 /////////////////////////////////////////////////////////////////        
 
         if(body.transform.localPosition.z<-0.1f){
@@ -376,6 +379,7 @@ public class Kam : Agent
         }
         if(body.transform.localPosition.y <-0.3){
             Debug.LogWarning("ylowreset");
+            // Debug.Log(body.transform.localPosition.z);
             counter++;
             EndEpisode();   
         }
@@ -388,6 +392,7 @@ public class Kam : Agent
         float rotx=body.transform.localRotation.eulerAngles.x;
         if((rotx>50f) && (rotx<310f)){
             Debug.LogWarning("nanamexreset");
+            // Debug.Log(body.transform.localPosition.z);
             counter++;
             EndEpisode();
         }
