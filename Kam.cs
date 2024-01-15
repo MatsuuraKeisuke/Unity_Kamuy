@@ -32,6 +32,7 @@ public class Kam : Agent
     int dam=100;
     int flim=100;   
     bool bb=true;
+    float goaltime=0;
     int counter=0;
     int goal=0;   
     int w=2;
@@ -168,6 +169,7 @@ public class Kam : Agent
         }                 
         artBody.enabled = true; 
         bb=true; 
+        goaltime = 0f;
         if(counter==300){
             Debug.LogWarning(goal);  
         }    
@@ -256,17 +258,22 @@ public class Kam : Agent
             }
         AddReward(matchSpeedReward*lookAtTargetReward);
         // AddReward(gravityReward*holizonReward);
-        AddReward(-0.3f);
+        AddReward(-0.2f);
         AddReward(-1.0f*Mathf.Abs(body.transform.localPosition.x));  
 
         float distanceToTarget = Vector3.Distance(currentPosition, target.localPosition);
         float predistanceToTarget = Vector3.Distance(previousPositions, target.localPosition);
         previousPositions = currentPosition;
 
+        if(body.transform.localPosition.z>0.001f){
+            goaltime += Time.deltaTime;
+        }
+
         if (distanceToTarget < 1f){
             Debug.LogWarning("GOAL");
             goal++;
             counter++;
+            Debug.Log(goaltime);            
             EndEpisode();
         }
         if (distanceToTarget - predistanceToTarget > 0.5f){
@@ -328,33 +335,33 @@ public class Kam : Agent
 //////////////////////////////////////////////////// 
 
 ////////////free 途中から////////////////////////////
-        if(body.transform.localPosition.z >Random.Range(3f,4f)){     
-            if(bb){
-                Debug.LogWarning("change");
-                bb=false;                
+        // if(body.transform.localPosition.z >Random.Range(3f,4f)){     
+        //     if(bb){
+        //         Debug.LogWarning("change");
+        //         bb=false;                
 
-                // first_link_xDrive[w].lowerLimit = -360;
-                // first_link_xDrive[w].upperLimit = 360;
-                // first_link_xDrive[w].stiffness = 0;  
-                // first_link_xDrive[w].damping = 0;       
-                // first_link_xDrive[w].forceLimit = 0; 
-                // first_link_Artic[w].xDrive = first_link_xDrive[w];
+        //         first_link_xDrive[w].lowerLimit = -360;
+        //         first_link_xDrive[w].upperLimit = 360;
+        //         first_link_xDrive[w].stiffness = 0;  
+        //         first_link_xDrive[w].damping = 0;       
+        //         first_link_xDrive[w].forceLimit = 0; 
+        //         first_link_Artic[w].xDrive = first_link_xDrive[w];
 
-                // second_link_xDrive[w].lowerLimit = -360;
-                // second_link_xDrive[w].upperLimit = 360;
-                // second_link_xDrive[w].stiffness = 0;  
-                // second_link_xDrive[w].damping = 0;       
-                // second_link_xDrive[w].forceLimit = 0; 
-                // second_link_Artic[w].xDrive = second_link_xDrive[w];                
+        //         // second_link_xDrive[w].lowerLimit = -360;
+        //         // second_link_xDrive[w].upperLimit = 360;
+        //         // second_link_xDrive[w].stiffness = 0;  
+        //         // second_link_xDrive[w].damping = 0;       
+        //         // second_link_xDrive[w].forceLimit = 0; 
+        //         // second_link_Artic[w].xDrive = second_link_xDrive[w];                
 
-                third_link_xDrive[w].lowerLimit = -360;
-                third_link_xDrive[w].upperLimit =360;
-                third_link_xDrive[w].stiffness = 0;  
-                third_link_xDrive[w].damping = 0;       
-                third_link_xDrive[w].forceLimit = 0;   
-                third_link_Artic[w].xDrive = third_link_xDrive[w];                    
-            }
-        }
+        //         // third_link_xDrive[w].lowerLimit = -360;
+        //         // third_link_xDrive[w].upperLimit =360;
+        //         // third_link_xDrive[w].stiffness = 0;  
+        //         // third_link_xDrive[w].damping = 0;       
+        //         // third_link_xDrive[w].forceLimit = 0;   
+        //         // third_link_Artic[w].xDrive = third_link_xDrive[w];                    
+        //     }
+        // }
 /////////////////////////////////////////////////////////////////        
 
         if(body.transform.localPosition.z<-0.1f){
@@ -367,7 +374,7 @@ public class Kam : Agent
             counter++;
             EndEpisode();
         }
-        if(body.transform.localPosition.y <-0.25){
+        if(body.transform.localPosition.y <-0.3){
             Debug.LogWarning("ylowreset");
             counter++;
             EndEpisode();   
