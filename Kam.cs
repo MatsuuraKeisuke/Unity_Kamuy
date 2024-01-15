@@ -98,7 +98,7 @@ public class Kam : Agent
         }
     }
 
-    public override void OnEpisodeBegin(){ Debug.Log("episode begin");
+    public override void OnEpisodeBegin(){ //Debug.Log("episode begin");
    
         artBody.enabled = false;
         body.transform.localPosition = new Vector3(0, 0, 0);  
@@ -261,7 +261,7 @@ public class Kam : Agent
             }
         AddReward(matchSpeedReward*lookAtTargetReward);
         // AddReward(gravityReward*holizonReward);
-        AddReward(-0.2f);
+        AddReward(-0.3f);
         AddReward(-1.0f*Mathf.Abs(body.transform.localPosition.x));  
 
         float distanceToTarget = Vector3.Distance(currentPosition, target.localPosition);
@@ -379,7 +379,7 @@ public class Kam : Agent
         }
         if(body.transform.localPosition.y <-0.3){
             Debug.LogWarning("ylowreset");
-            // Debug.Log(body.transform.localPosition.z);
+            // Debug.Log(changepoint);
             counter++;
             EndEpisode();   
         }
@@ -392,7 +392,7 @@ public class Kam : Agent
         float rotx=body.transform.localRotation.eulerAngles.x;
         if((rotx>50f) && (rotx<310f)){
             Debug.LogWarning("nanamexreset");
-            // Debug.Log(body.transform.localPosition.z);
+            // Debug.Log(changepoint);
             counter++;
             EndEpisode();
         }
