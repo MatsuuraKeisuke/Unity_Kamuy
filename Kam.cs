@@ -35,10 +35,11 @@ public class Kam : Agent
     bool bb=true;
     float goaltime=0;
     float changepoint=0;
+    float karipoint=300;
     int counter=0;
     int goal=0;   
     int w=2;
-    float boxdistance = 5f;
+    float boxdistance = 8f;
  
 
     public override void Initialize(){ Debug.Log("Initialize");
@@ -177,7 +178,7 @@ public class Kam : Agent
         }    
         previousPositions = new Vector3(0, 0, 0); 
         target.localPosition = new Vector3(0,0,boxdistance);
-        changepoint = Random.Range(0.5f,1.5f);
+        changepoint = Random.Range(3f,4f);
     }
 
     public override void CollectObservations(VectorSensor sensor){
@@ -271,11 +272,15 @@ public class Kam : Agent
         if(body.transform.localPosition.z>0.001f){
             goaltime += Time.deltaTime;
         }
+        if(karipoint>400){
+            karipoint=300;
+        }
 
         if (distanceToTarget < 1f){
             Debug.LogWarning("GOAL");
             goal++;
             counter++;
+            karipoint++;
             // Debug.Log(goaltime);            
             EndEpisode();
         }
@@ -338,24 +343,25 @@ public class Kam : Agent
 ////////////////////////////////////////////////////
 
 ////////////free 途中から////////////////////////////
-        if(body.transform.localPosition.z > changepoint){     
+        // if(body.transform.localPosition.z > changepoint){     
+        if(body.transform.localPosition.z > (karipoint*0.01f)){                
             if(bb){
-                Debug.LogWarning("change");
+                Debug.LogWarning("change");Debug.Log(karipoint*0.01f);
                 bb=false;                
 
-                first_link_xDrive[w].lowerLimit = -360;
-                first_link_xDrive[w].upperLimit = 360;
-                first_link_xDrive[w].stiffness = 0;  
-                first_link_xDrive[w].damping = 0;       
-                first_link_xDrive[w].forceLimit = 0; 
-                first_link_Artic[w].xDrive = first_link_xDrive[w];
+                // first_link_xDrive[w].lowerLimit = -360;
+                // first_link_xDrive[w].upperLimit = 360;
+                // first_link_xDrive[w].stiffness = 0;  
+                // first_link_xDrive[w].damping = 0;       
+                // first_link_xDrive[w].forceLimit = 0; 
+                // first_link_Artic[w].xDrive = first_link_xDrive[w];
 
-                // second_link_xDrive[w].lowerLimit = -360;
-                // second_link_xDrive[w].upperLimit = 360;
-                // second_link_xDrive[w].stiffness = 0;  
-                // second_link_xDrive[w].damping = 0;       
-                // second_link_xDrive[w].forceLimit = 0; 
-                // second_link_Artic[w].xDrive = second_link_xDrive[w];                
+                second_link_xDrive[w].lowerLimit = -360;
+                second_link_xDrive[w].upperLimit = 360;
+                second_link_xDrive[w].stiffness = 0;  
+                second_link_xDrive[w].damping = 0;       
+                second_link_xDrive[w].forceLimit = 0; 
+                second_link_Artic[w].xDrive = second_link_xDrive[w];                
 
                 // third_link_xDrive[w].lowerLimit = -360;
                 // third_link_xDrive[w].upperLimit =360;
@@ -386,6 +392,7 @@ public class Kam : Agent
         float rotz=body.transform.localRotation.eulerAngles.z;
         if((rotz>50f) && (rotz<310f)){
             Debug.LogWarning("nanamezreset");
+            // Debug.Log(changepoint);
             counter++;
             EndEpisode();
         }
