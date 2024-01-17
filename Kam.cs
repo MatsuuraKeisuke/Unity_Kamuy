@@ -260,9 +260,9 @@ public class Kam : Agent
                 var velDeltaMagnitude = Mathf.Clamp(Vector3.Distance(actualVelocity, velocityGoal), 0, TargetWalkingSpeed);
                 return Mathf.Pow(1 - Mathf.Pow(velDeltaMagnitude / TargetWalkingSpeed, 2), 2);
             }
-        AddReward(matchSpeedReward*lookAtTargetReward);
+        // AddReward(matchSpeedReward*lookAtTargetReward);
         // AddReward(gravityReward*holizonReward);
-        AddReward(-0.3f);
+        // AddReward(-0.3f);
         AddReward(-1.0f*Mathf.Abs(body.transform.localPosition.x));  
 
         float distanceToTarget = Vector3.Distance(currentPosition, target.localPosition);
@@ -281,12 +281,14 @@ public class Kam : Agent
             goal++;
             counter++;
             karipoint++;
+            AddReward(50f);
             // Debug.Log(goaltime);            
             EndEpisode();
         }
         if (distanceToTarget - predistanceToTarget > 0.5f){
             Debug.LogWarning("back");
             counter++;
+            AddReward(-10f);
             EndEpisode();
         }
         else if (distanceToTarget - predistanceToTarget >= 0f){
@@ -349,19 +351,19 @@ public class Kam : Agent
                 Debug.LogWarning("change");Debug.Log(karipoint*0.01f);
                 bb=false;                
 
-                // first_link_xDrive[w].lowerLimit = -360;
-                // first_link_xDrive[w].upperLimit = 360;
-                // first_link_xDrive[w].stiffness = 0;  
-                // first_link_xDrive[w].damping = 0;       
-                // first_link_xDrive[w].forceLimit = 0; 
-                // first_link_Artic[w].xDrive = first_link_xDrive[w];
+                first_link_xDrive[w].lowerLimit = -360;
+                first_link_xDrive[w].upperLimit = 360;
+                first_link_xDrive[w].stiffness = 0;  
+                first_link_xDrive[w].damping = 0;       
+                first_link_xDrive[w].forceLimit = 0; 
+                first_link_Artic[w].xDrive = first_link_xDrive[w];
 
-                second_link_xDrive[w].lowerLimit = -360;
-                second_link_xDrive[w].upperLimit = 360;
-                second_link_xDrive[w].stiffness = 0;  
-                second_link_xDrive[w].damping = 0;       
-                second_link_xDrive[w].forceLimit = 0; 
-                second_link_Artic[w].xDrive = second_link_xDrive[w];                
+                // second_link_xDrive[w].lowerLimit = -360;
+                // second_link_xDrive[w].upperLimit = 360;
+                // second_link_xDrive[w].stiffness = 0;  
+                // second_link_xDrive[w].damping = 0;       
+                // second_link_xDrive[w].forceLimit = 0; 
+                // second_link_Artic[w].xDrive = second_link_xDrive[w];                
 
                 // third_link_xDrive[w].lowerLimit = -360;
                 // third_link_xDrive[w].upperLimit =360;
@@ -376,17 +378,20 @@ public class Kam : Agent
         if(body.transform.localPosition.z<-0.1f){
             Debug.LogWarning("out");
             counter++;
+            AddReward(-10f);
             EndEpisode();
         }
         if(body.transform.localPosition.z>boxdistance){
             Debug.LogWarning("stop");
             counter++;
+            AddReward(-10f);
             EndEpisode();
         }
         if(body.transform.localPosition.y <-0.3){
             Debug.LogWarning("ylowreset");
             // Debug.Log(changepoint);
             counter++;
+            AddReward(-10f);
             EndEpisode();   
         }
         float rotz=body.transform.localRotation.eulerAngles.z;
@@ -394,6 +399,7 @@ public class Kam : Agent
             Debug.LogWarning("nanamezreset");
             // Debug.Log(changepoint);
             counter++;
+            AddReward(-10f);
             EndEpisode();
         }
         float rotx=body.transform.localRotation.eulerAngles.x;
@@ -401,6 +407,7 @@ public class Kam : Agent
             Debug.LogWarning("nanamexreset");
             // Debug.Log(changepoint);
             counter++;
+            AddReward(-10f);
             EndEpisode();
         }
     }
