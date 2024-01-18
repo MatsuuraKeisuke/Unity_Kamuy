@@ -7,11 +7,22 @@ using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Policies;
 using System.Net.Sockets;
 using UnityEngine.UIElements;
+using System.IO;
+using System.Text;
 
 public class Kam : Agent
 {
     private float TargetWalkingSpeed =0.9f;
 
+    private string filePath = "/home/sato/Documents" + "/output.csv";
+    private string filePath2 = "/home/sato/Documents" + "/goaltime.csv";
+    bool onetimeoutput=true;
+    private List<string[]> rowData = new List<string[]>();
+    private List<string[]> rowData2 = new List<string[]>();
+    string[] header = new string[]{ "distance", "speed" ,"time"};
+    string[] header2 = new string[]{ "goaltime"};
+   
+    float recorddis=1;
     public Transform target;
     private GameObject body;
     private GameObject[] first_link = new GameObject[4];
@@ -35,7 +46,6 @@ public class Kam : Agent
     bool bb=true;
     float goaltime=0;
     float changepoint=0;
-    float karipoint=300;
     int counter=0;
     int goal=0;   
     int w=2;
@@ -59,6 +69,7 @@ public class Kam : Agent
         third_link[3] = second_link[3].transform.Find("front_left_link_foot").gameObject;
 
         artBody = body.GetComponent<ArticulationBody>();
+        rowData.Add(header);
 
         for(int i=0;i<4;i++){
             first_link_Artic[i] = first_link[i].GetComponent<ArticulationBody>();  
@@ -260,35 +271,60 @@ public class Kam : Agent
                 var velDeltaMagnitude = Mathf.Clamp(Vector3.Distance(actualVelocity, velocityGoal), 0, TargetWalkingSpeed);
                 return Mathf.Pow(1 - Mathf.Pow(velDeltaMagnitude / TargetWalkingSpeed, 2), 2);
             }
-        // AddReward(matchSpeedReward*lookAtTargetReward);
-        // AddReward(gravityReward*holizonReward);
-        // AddReward(-0.3f);
+        AddReward(matchSpeedReward*lookAtTargetReward);
+        AddReward(-0.3f);
         AddReward(-1.0f*Mathf.Abs(body.transform.localPosition.x));  
+
+        if(body.transform.localPosition.z>0.001f){
+            goaltime += Time.deltaTime;
+        }
+
+       if(body.transform.localPosition.z> (recorddis*0.5f)){
+            string[] row = new string[] { (recorddis*0.5f).ToString(), bodyVelocity.magnitude.ToString(),goaltime.ToString()};
+            rowData.Add(row);
+            recorddis++;
+       }
 
         float distanceToTarget = Vector3.Distance(currentPosition, target.localPosition);
         float predistanceToTarget = Vector3.Distance(previousPositions, target.localPosition);
         previousPositions = currentPosition;
 
-        if(body.transform.localPosition.z>0.001f){
-            goaltime += Time.deltaTime;
-        }
-        if(karipoint>400){
-            karipoint=300;
-        }
-
-        if (distanceToTarget < 1f){
+        if (body.transform.localPosition.z > (boxdistance-1)){
             Debug.LogWarning("GOAL");
             goal++;
             counter++;
-            karipoint++;
-            AddReward(50f);
-            // Debug.Log(goaltime);            
+            Debug.Log(goaltime);  
+            string[] row2 = new string[] {goaltime.ToString()};
+            rowData2.Add(row2);      
+
+            if(onetimeoutput){
+                StreamWriter outStream = System.IO.File.CreateText(filePath);
+                    for (int i = 0; i < rowData.Count; i++)
+                    {
+                        string[] row = rowData[i];
+                        string line = string.Join(",", row);
+                        outStream.WriteLine(line);
+                        onetimeoutput=false;
+                    }
+                outStream.Close();
+                Debug.Log("CSVファイルに書き込みました：" + filePath);   
+            }
+
+                StreamWriter outStream2 = System.IO.File.CreateText(filePath2);
+                    for (int i = 0; i < rowData2.Count; i++)
+                    {
+                        string[] row = rowData2[i];
+                        string line = string.Join(",", row);
+                        outStream2.WriteLine(line);
+                    }
+                outStream2.Close();
+                Debug.Log("CSVファイルに追加：" + filePath2);  
+ 
             EndEpisode();
         }
         if (distanceToTarget - predistanceToTarget > 0.5f){
             Debug.LogWarning("back");
             counter++;
-            AddReward(-10f);
             EndEpisode();
         }
         else if (distanceToTarget - predistanceToTarget >= 0f){
@@ -345,25 +381,24 @@ public class Kam : Agent
 ////////////////////////////////////////////////////
 
 ////////////free 途中から////////////////////////////
-        // if(body.transform.localPosition.z > changepoint){     
-        if(body.transform.localPosition.z > (karipoint*0.01f)){                
+        if(body.transform.localPosition.z > changepoint){              
             if(bb){
-                Debug.LogWarning("change");Debug.Log(karipoint*0.01f);
+                Debug.LogWarning("change");
                 bb=false;                
 
-                first_link_xDrive[w].lowerLimit = -360;
-                first_link_xDrive[w].upperLimit = 360;
-                first_link_xDrive[w].stiffness = 0;  
-                first_link_xDrive[w].damping = 0;       
-                first_link_xDrive[w].forceLimit = 0; 
-                first_link_Artic[w].xDrive = first_link_xDrive[w];
+                // first_link_xDrive[w].lowerLimit = -360;
+                // first_link_xDrive[w].upperLimit = 360;
+                // first_link_xDrive[w].stiffness = 0;  
+                // first_link_xDrive[w].damping = 0;       
+                // first_link_xDrive[w].forceLimit = 0; 
+                // first_link_Artic[w].xDrive = first_link_xDrive[w];
 
-                // second_link_xDrive[w].lowerLimit = -360;
-                // second_link_xDrive[w].upperLimit = 360;
-                // second_link_xDrive[w].stiffness = 0;  
-                // second_link_xDrive[w].damping = 0;       
-                // second_link_xDrive[w].forceLimit = 0; 
-                // second_link_Artic[w].xDrive = second_link_xDrive[w];                
+                second_link_xDrive[w].lowerLimit = -360;
+                second_link_xDrive[w].upperLimit = 360;
+                second_link_xDrive[w].stiffness = 0;  
+                second_link_xDrive[w].damping = 0;       
+                second_link_xDrive[w].forceLimit = 0; 
+                second_link_Artic[w].xDrive = second_link_xDrive[w];                
 
                 // third_link_xDrive[w].lowerLimit = -360;
                 // third_link_xDrive[w].upperLimit =360;
@@ -378,20 +413,17 @@ public class Kam : Agent
         if(body.transform.localPosition.z<-0.1f){
             Debug.LogWarning("out");
             counter++;
-            AddReward(-10f);
             EndEpisode();
         }
         if(body.transform.localPosition.z>boxdistance){
             Debug.LogWarning("stop");
             counter++;
-            AddReward(-10f);
             EndEpisode();
         }
         if(body.transform.localPosition.y <-0.3){
             Debug.LogWarning("ylowreset");
             // Debug.Log(changepoint);
             counter++;
-            AddReward(-10f);
             EndEpisode();   
         }
         float rotz=body.transform.localRotation.eulerAngles.z;
@@ -399,7 +431,6 @@ public class Kam : Agent
             Debug.LogWarning("nanamezreset");
             // Debug.Log(changepoint);
             counter++;
-            AddReward(-10f);
             EndEpisode();
         }
         float rotx=body.transform.localRotation.eulerAngles.x;
@@ -407,7 +438,6 @@ public class Kam : Agent
             Debug.LogWarning("nanamexreset");
             // Debug.Log(changepoint);
             counter++;
-            AddReward(-10f);
             EndEpisode();
         }
     }
