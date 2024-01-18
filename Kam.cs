@@ -70,6 +70,7 @@ public class Kam : Agent
 
         artBody = body.GetComponent<ArticulationBody>();
         rowData.Add(header);
+        rowData2.Add(header2);
 
         for(int i=0;i<4;i++){
             first_link_Artic[i] = first_link[i].GetComponent<ArticulationBody>();  
