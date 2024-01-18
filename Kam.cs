@@ -282,7 +282,7 @@ public class Kam : Agent
         }
 
        if(body.transform.localPosition.z> (recorddis*0.025f)){
-            string[] row = new string[] { (recorddis*0.025f).ToString(), bodyVelocity.magnitude.ToString(),goaltime.ToString()};
+            string[] row = new string[] { body.transform.localPosition.z.ToString(), bodyVelocity.magnitude.ToString(),goaltime.ToString()};
             rowData.Add(row);
             recorddis++;
        }
