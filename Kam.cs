@@ -20,7 +20,8 @@ public class Kam : Agent
     private List<string[]> rowData = new List<string[]>();
     private List<string[]> rowData2 = new List<string[]>();
     string[] header = new string[]{ "distance", "speed" ,"time"};
-    string[] header2 = new string[]{ "goaltime"};
+    string[] header2 = new string[]{ "goaltime","average"};
+    float allaverage=0;
    
     float recorddis=1;
     public Transform target;
@@ -280,8 +281,8 @@ public class Kam : Agent
             goaltime += Time.deltaTime;
         }
 
-       if(body.transform.localPosition.z> (recorddis*0.5f)){
-            string[] row = new string[] { (recorddis*0.5f).ToString(), bodyVelocity.magnitude.ToString(),goaltime.ToString()};
+       if(body.transform.localPosition.z> (recorddis*0.025f)){
+            string[] row = new string[] { (recorddis*0.025f).ToString(), bodyVelocity.magnitude.ToString(),goaltime.ToString()};
             rowData.Add(row);
             recorddis++;
        }
@@ -295,7 +296,9 @@ public class Kam : Agent
             goal++;
             counter++;
             Debug.Log(goaltime);  
-            string[] row2 = new string[] {goaltime.ToString()};
+            allaverage+=goaltime;
+            var average =allaverage/goal;
+            string[] row2 = new string[] {goaltime.ToString(),average.ToString()};
             rowData2.Add(row2);      
 
             if(onetimeoutput){
