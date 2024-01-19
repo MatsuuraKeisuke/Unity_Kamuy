@@ -13,17 +13,6 @@ using System.Text;
 public class Kam : Agent
 {
     private float TargetWalkingSpeed =0.9f;
-
-    private string filePath = "/home/sato/Documents" + "/output.csv";
-    private string filePath2 = "/home/sato/Documents" + "/goaltime.csv";
-    bool onetimeoutput=true;
-    private List<string[]> rowData = new List<string[]>();
-    private List<string[]> rowData2 = new List<string[]>();
-    string[] header = new string[]{ "distance", "speed" ,"time"};
-    string[] header2 = new string[]{ "goaltime","average"};
-    float allaverage=0;
-   
-    float recorddis=1;
     public Transform target;
     private GameObject body;
     private GameObject[] first_link = new GameObject[4];
@@ -41,17 +30,28 @@ public class Kam : Agent
     private Vector3 previousPositions = new Vector3(0, 0, 0); 
     // private float[] lim = {-10f,20f,-80f,40f,-50f,70f};
     private float[] lim = {-10f,60f,-80f,40f,-50f,70f};
-    int sti=10000;
-    int dam=100;
-    int flim=100;   
     bool bb=true;
     float goaltime=0;
     float changepoint=0;
     int counter=0;
     int goal=0;   
-    int w=2;
+    float lockfirst_link = 0;                
+    float locksecond_link = 0;
+    float lockthird_link = 0;
+    float allaverage=0;  
+    bool onetimeoutput=true;
+    int sti=10000;
+    int dam=100;
+    int flim=100;   
     float boxdistance = 8f;
- 
+    int w=2;
+    private string filePath = "/home/sato/Documents" + "/data.csv";
+    private string filePath2 = "/home/sato/Documents" + "/time.csv";
+    private List<string[]> rowData = new List<string[]>();
+    private List<string[]> rowData2 = new List<string[]>();
+    string[] header = new string[]{ "time", "distance" ,"speed" ,"first" ,"second" ,"third"};
+    string[] header2 = new string[]{ "goaltime","average","changepoint","1deg","2deg","3deg"};
+
 
     public override void Initialize(){ Debug.Log("Initialize");
         
@@ -277,15 +277,19 @@ public class Kam : Agent
         AddReward(-0.3f);
         AddReward(-1.0f*Mathf.Abs(body.transform.localPosition.x));  
 
-        if(body.transform.localPosition.z>0.001f){
+        if(body.transform.localPosition.z>0f){
             goaltime += Time.deltaTime;
-        }
+            var speed = (body.transform.localPosition.z-previousPositions.z) / Time.deltaTime;  
+            var f=first_link[w].transform.localRotation.eulerAngles.z;
+            var s=second_link[w].transform.localRotation.eulerAngles.x;
+            var t=third_link[w].transform.localRotation.eulerAngles.x;
+            if(f>180){f-=360;}
+            if(s>180){s-=360;}
+            if(t>180){t-=360;}
 
-       if(body.transform.localPosition.z> (recorddis*0.025f)){
-            string[] row = new string[] { body.transform.localPosition.z.ToString(), bodyVelocity.magnitude.ToString(),goaltime.ToString()};
+            string[] row = new string[] {goaltime.ToString(),body.transform.localPosition.z.ToString(),speed.ToString(),f.ToString(),s.ToString(),t.ToString() };
             rowData.Add(row);
-            recorddis++;
-       }
+        }
 
         float distanceToTarget = Vector3.Distance(currentPosition, target.localPosition);
         float predistanceToTarget = Vector3.Distance(previousPositions, target.localPosition);
@@ -298,7 +302,7 @@ public class Kam : Agent
             Debug.Log(goaltime);  
             allaverage+=goaltime;
             var average =allaverage/goal;
-            string[] row2 = new string[] {goaltime.ToString(),average.ToString()};
+            string[] row2 = new string[] {goaltime.ToString(),average.ToString(),changepoint.ToString(),lockfirst_link.ToString(),locksecond_link.ToString(),lockthird_link.ToString()};
             rowData2.Add(row2);      
 
             if(onetimeoutput){
@@ -308,8 +312,8 @@ public class Kam : Agent
                         string[] row = rowData[i];
                         string line = string.Join(",", row);
                         outStream.WriteLine(line);
-                        onetimeoutput=false;
                     }
+                onetimeoutput=false;    
                 outStream.Close();
                 Debug.Log("CSVファイルに書き込みました：" + filePath);   
             }
@@ -341,9 +345,9 @@ public class Kam : Agent
 ////////////lock////////////////////
         // if(body.transform.localPosition.z >changepoint){     
         //     if(bb){
-        //         var lockfirst_link = first_link[w].transform.localRotation.eulerAngles.z;                
-        //         var locksecond_link = second_link[w].transform.localRotation.eulerAngles.x;
-        //         var lockthird_link = third_link[w].transform.localRotation.eulerAngles.x;
+        //         lockfirst_link = first_link[w].transform.localRotation.eulerAngles.z;                
+        //         locksecond_link = second_link[w].transform.localRotation.eulerAngles.x;
+        //         lockthird_link = third_link[w].transform.localRotation.eulerAngles.x;
 
         //         artBody.enabled = false;
         //             // first_link[w].transform.localRotation = Quaternion.Euler(0, 0, lockfirst_link);
